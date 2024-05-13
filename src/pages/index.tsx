@@ -2,8 +2,7 @@ import { useState } from 'react';
 import styles from './index.module.css';
 
 const Home = () => {
-  const [samplePos, setSanplePos] = useState(0);
-  const [board, setboard] = useState([
+  const normalBoard = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -13,34 +12,32 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ]);
+  ];
 
-  const [bombmap, setbombmap] = useState([
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ]);
+  const [userInputs, setUserInputs] = useState(normalBoard);
+  const [bombmap, setbombmap] = useState(normalBoard);
+  const board = normalBoard.map((row) => row.map(() => -1));
+  console.table(board);
+  console.table(normalBoard);
 
-//<div
-//className={styles.sampleStyle}
-//style={{ backgroundPosition: ` ${-30 * samplePos}px 0px` }}
-///>
-//<button onClick={() => setSanplePos((p) => (p + 1) % 14)}>sample</button>
+  const clickHandler = (x: number, y: number) =>{
+    
+  }
+
+
 
   return (
     <div className={styles.container}>
       <div className={styles.flame}>
         <div className={styles.board}>
-          {bombmap.map((row, y) =>
+          {board.map((row, y) =>
             row.map((color, x) => (
-              <div className={styles.bombmap} key={`${x}-${y}`}>
-                <div className={styles.cell} key={`${x}-${y}`} />
+              <div
+                className={styles.bombmap}
+                key={`${x}-${y}`}
+                style={{ backgroundPosition: ` ${-30 * color}px 0px` }}
+              >
+                {color === -1 && <div className={styles.cell} key={`${x}-${y}`} />}
               </div>
             )),
           )}
