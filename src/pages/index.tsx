@@ -15,16 +15,18 @@ const Home = () => {
   ];
 
   const [userInputs, setUserInputs] = useState(normalBoard);
-  const [bombmap, setbombmap] = useState(normalBoard);
+  const [bombMap, setBombMap] = useState(normalBoard);
   const board = normalBoard.map((row) => row.map(() => -1));
   console.table(board);
   console.table(normalBoard);
 
-  const clickHandler = (x: number, y: number) =>{
-    
-  }
-
-
+  const clickHandler = (x: number, y: number) => {
+    console.log(bombMap);
+    console.log(x, y);
+    const newBoard = structuredClone(bombMap);
+    newBoard[y][x] = turncolor;
+    setBombMap(newBoard);
+  };
 
   return (
     <div className={styles.container}>
@@ -33,7 +35,7 @@ const Home = () => {
           {board.map((row, y) =>
             row.map((color, x) => (
               <div
-                className={styles.bombmap}
+                className={styles.bombMap}
                 key={`${x}-${y}`}
                 style={{ backgroundPosition: ` ${-30 * color}px 0px` }}
               >
