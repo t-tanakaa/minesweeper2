@@ -23,19 +23,32 @@ const Home = () => {
     newUserInputs[y][x] = 1;
     setUserInputs(newUserInputs);
     console.log(newUserInputs);
+    const total = bombMap.flat().every((value) => value === 0);
+    if (total === true) {
+      for (let dy = 0; dy < 10; dy++) {
+        const row = Math.floor(Math.random() * 9);
+        const col = Math.floor(Math.random() * 9);
+        console.log(row, col);
+        newBombMap[row][col] = 1;
+        setBombMap(newBombMap);
+      }
+    }
+    console.log(newBombMap);
   };
 
   const makeBoard = (userInput: number[][], bombMap: number[][]) => {
     for (let y = 0; y < 9; y++) {
       for (let x = 0; x < 9; x++) {
         if (userInput[y][x] === 1) {
-          board[y][x] = 4;
+          board[y][x] = 1;
+        if (bombMap[y][x]===1)
+          board[y][x] =11;
         }
       }
     }
   };
 
-  console.table(board);
+  //console.table(board);
   //console.table(normalBoard);
 
   makeBoard(userInputs, bombMap);
