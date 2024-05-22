@@ -17,27 +17,28 @@ const Home = () => {
   const [userInputs, setUserInputs] = useState(normalBoard);
   const [bombMap, setBombMap] = useState(normalBoard);
   const board = normalBoard.map((row) => row.map(() => -1));
-  const newUserInputs = structuredClone(userInputs);
-  const newBombMap = structuredClone(bombMap);
   const clickHandler = (x: number, y: number) => {
+    const newUserInputs = structuredClone(userInputs);
+    const newBombMap = structuredClone(bombMap);
     newUserInputs[y][x] = 1;
     setUserInputs(newUserInputs);
     console.log(newUserInputs);
-    makeBoard(newUserInputs, newBombMap)
   };
 
-  const makeBoard = (userInput, bombMap) => {
+  const makeBoard = (userInput: number[][], bombMap: number[][]) => {
     for (let y = 0; y < 9; y++) {
       for (let x = 0; x < 9; x++) {
-        if (userInputs[y][x] === 1) board[y][x] = 1;
+        if (userInput[y][x] === 1) {
+          board[y][x] = 4;
+        }
       }
     }
-    return board;
   };
 
   console.table(board);
-  console.table(normalBoard);
+  //console.table(normalBoard);
 
+  makeBoard(userInputs, bombMap);
   return (
     <div className={styles.container}>
       <div className={styles.flame}>
@@ -48,7 +49,7 @@ const Home = () => {
                 className={styles.bombMap}
                 key={`${x}-${y}`}
                 onClick={() => clickHandler(x, y)}
-                style={{ backgroundPosition: ` ${-30 * bomNumber}px 0px` }}
+                style={{ backgroundPosition: ` ${-30 * (bomNumber - 1)}px 0px` }}
               >
                 {bomNumber === -1 && (
                   <div
