@@ -1,15 +1,56 @@
 import { useState } from 'react';
 import styles from './index.module.css';
 const directions = [
+  [-1, 1],
   [0, 1],
-  [0, -1],
   [1, 1],
-  [1, -1],
   [1, 0],
+  [1, -1],
+  [0, -1],
   [-1, -1],
   [-1, 0],
-  [-1, 1],
 ];
+
+const deployment = (bombMap: number[][], y: number, x: number, newBombMap: number[][]) => {
+  const total = bombMap.flat().every((value) => value === 0);
+  if (total === true) {
+    bomb(bombMap, y, x, newBombMap);
+    numberSelect(newBombMap);
+  }
+};
+
+const bomb = (bombMap: number[][], y: number, x: number, newBombMap: number[][]) => {
+  let n = 0;
+  while (10 > n) {
+    const row = Math.floor(Math.random() * 9);
+    const col = Math.floor(Math.random() * 9);
+    console.log(row, col);
+    if (newBombMap[row][col] !== -1 && y !== row && x !== col) {
+      newBombMap[row][col] = -1;
+      n++;
+    }
+  }
+  return bomb;
+};
+
+const numberSelect = (newBombMap: number[][]) => {
+  for (let dy = 0; dy < 9; dy++) {
+    for (let dx = 0; dx < 9; dx++) {
+      if (newBombMap[dy][dx] === -1) {
+        continue;
+      }
+      for (const direction of directions) {
+        if (
+          newBombMap[dy + direction[0]] !== undefined &&
+          newBombMap[dy + direction[0]][dx + direction[1]] === -1
+        ) {
+          newBombMap[dy][dx] += 1;
+        }
+      }
+    }
+  }
+};
+
 const Home = () => {
   const normalBoard = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -31,49 +72,30 @@ const Home = () => {
     const newBombMap = structuredClone(bombMap);
     newUserInputs[y][x] = 1;
     setUserInputs(newUserInputs);
-    console.log(newUserInputs);
-    const total = bombMap.flat().every((value) => value === 0);
-    if (total === true) {
-      let n = 0;
-      while (10 > n) {
-        const row = Math.floor(Math.random() * 9);
-        const col = Math.floor(Math.random() * 9);
-        console.log(row, col);
-        if (newBombMap[row][col] === 0) {
-          newBombMap[row][col] = 1;
-          n++;
-        } else if (newBombMap[row][col] === 1) continue;
-        setBombMap(newBombMap);
-      }
-      for (const direction of directions)
-        for (let dy = 0; dy < 9; dy++) {
-          for (let dx = 0; dx < 9; dx++) {
-            if(board[dy+direction[0]]!== undefined&&
-              board[dy+direction[0]][dx+direction[1]]=== 11)
-              board[dy][dx] =3;
-          }
-        }
-    }
-
-    console.log(newBombMap);
-    console.table(board)
+    deployment(bombMap, y, x, newBombMap);
+    setBombMap(newBombMap);
   };
 
-  const makeBoard = (userInput: number[][], bombMap: number[][]) => {
+  const makeBoard = (userInput: number[][], bombMap: number[][], board: number[][]) => {
     for (let y = 0; y < 9; y++) {
       for (let x = 0; x < 9; x++) {
         if (userInput[y][x] === 1) {
           board[y][x] = 1;
-          if (bombMap[y][x] === 1) board[y][x] = 11;
+          if (bombMap[y][x] === -1) {
+            board[y][x] = 11;
+          }
+          for (let q = 1; q < 9; q++) {
+            if (bombMap[y][x] === q) {
+              board[y][x] = q;
+            }
+          }
+          if (bombMap[y][x] === 0) board[y][x] = 0;
         }
       }
     }
   };
 
-  //console.table(board);
-  //console.table(normalBoard);
-
-  makeBoard(userInputs, bombMap);
+  makeBoard(userInputs, bombMap, board);
   return (
     <div className={styles.container}>
       <div className={styles.flame}>
