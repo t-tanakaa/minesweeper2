@@ -14,12 +14,12 @@ const directions = [
 const deployment = (bombMap: number[][], y: number, x: number, newBombMap: number[][]) => {
   const total = bombMap.flat().every((value) => value === 0);
   if (total === true) {
-    bomb(bombMap, y, x, newBombMap);
+    bomb(y, x, newBombMap);
     numberSelect(newBombMap);
   }
 };
 
-const bomb = (bombMap: number[][], y: number, x: number, newBombMap: number[][]) => {
+const bomb = (y: number, x: number, newBombMap: number[][]) => {
   let n = 0;
   while (10 > n) {
     const row = Math.floor(Math.random() * 9);
@@ -51,6 +51,18 @@ const numberSelect = (newBombMap: number[][]) => {
   }
 };
 
+// const chain =(x:number, y:number ,bombMap:[][],board:number[][])=>{
+//   for (const direction of directions){
+//     if (
+//       bombMap[y + direction[0]] !== undefined &&
+//       bombMap[y + direction[0]][x + direction[1]] === 0
+//     ){
+//       board[y + direction[0]][x + direction[1]] === 0
+//       if
+//     }
+//   }
+// }
+
 const Home = () => {
   const normalBoard = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -74,6 +86,8 @@ const Home = () => {
     setUserInputs(newUserInputs);
     deployment(bombMap, y, x, newBombMap);
     setBombMap(newBombMap);
+    console.table(bombMap);
+    console.table(board);
   };
 
   const makeBoard = (userInput: number[][], bombMap: number[][], board: number[][]) => {
