@@ -24,7 +24,7 @@ const bomb = (y: number, x: number, newBombMap: number[][]) => {
   while (10 > n) {
     const row = Math.floor(Math.random() * 9);
     const col = Math.floor(Math.random() * 9);
-    console.log(row, col);
+    //console.log(row, col);
     if (newBombMap[row][col] !== -1 && y !== row && x !== col) {
       newBombMap[row][col] = -1;
       n++;
@@ -51,17 +51,21 @@ const numberSelect = (newBombMap: number[][]) => {
   }
 };
 
-// const chain =(x:number, y:number ,bombMap:[][],board:number[][])=>{
-//   for (const direction of directions){
-//     if (
-//       bombMap[y + direction[0]] !== undefined &&
-//       bombMap[y + direction[0]][x + direction[1]] === 0
-//     ){
-//       board[y + direction[0]][x + direction[1]] === 0
-//       if
-//     }
-//   }
-// }
+const chain = (y: number, x: number, bombMap: [][], board: number[][]) => {
+  const lst = []
+  for (const direction of directions) {
+    const dx = x + direction[0];
+    const dy = y + direction[1];
+    if (bombMap[dy][dx] === 0) {
+      console.log(dy, dx);
+      lst.push([dy,dx])
+    }
+  }
+  if(){
+  lst.map(([dy,dx])=>{chain(dy,dx,bombMap, board)})
+  }
+  else return lst
+};
 
 const Home = () => {
   const normalBoard = [
@@ -83,11 +87,12 @@ const Home = () => {
     const newUserInputs = structuredClone(userInputs);
     const newBombMap = structuredClone(bombMap);
     newUserInputs[y][x] = 1;
+    //console.table(newUserInputs);
     setUserInputs(newUserInputs);
     deployment(bombMap, y, x, newBombMap);
     setBombMap(newBombMap);
-    console.table(bombMap);
-    console.table(board);
+    //console.table(bombMap);
+    //sconsole.table(board);
   };
 
   const makeBoard = (userInput: number[][], bombMap: number[][], board: number[][]) => {
@@ -103,7 +108,10 @@ const Home = () => {
               board[y][x] = q;
             }
           }
-          if (bombMap[y][x] === 0) board[y][x] = 0;
+          if (bombMap[y][x] === 0){
+            board[y][x] = 0;
+            chain(x, y, bombMap, board)
+          }
         }
       }
     }
