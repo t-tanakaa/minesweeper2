@@ -51,22 +51,26 @@ const numberSelect = (newBombMap: number[][]) => {
   }
 };
 
-const chain = (y: number, x: number, bombMap: [][], board: number[][]) => {
-  const lst = []
+const zeroChain = (y: number, x: number, bombMap: number[][], board: number[][], lst2: number[][]) => {
+  const lst = [];
   for (const direction of directions) {
     const dx = x + direction[0];
     const dy = y + direction[1];
-    if (bombMap[dy][dx] === 0) {
-      console.log(dy, dx);
-      lst.push([dy,dx])
+    if (bombMap[dy] !== undefined && bombMap[dy][dx] === 0) {
+      lst.push([dy, dx]);
+      lst2.push([dy, dx]);
+      console.log(lst2);
     }
   }
-  if(){
-  lst.map(([dy,dx])=>{chain(dy,dx,bombMap, board)})
-  }
-  else return lst
+  if (lst.length !== 0 && lst2 === lst) {
+    lst.map(([dy, dx]) => {
+      zeroChain(dy, dx, bombMap, board, lst2);
+    });
+  } else return;
 };
 
+// bombMap[dy + direction[0]] !== undefined &&
+// bombMap[dy + direction[0]][dx + direction[1]] === 0
 const Home = () => {
   const normalBoard = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -79,7 +83,7 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
-
+  const lst2: number[][] = [];
   const [userInputs, setUserInputs] = useState(normalBoard);
   const [bombMap, setBombMap] = useState(normalBoard);
   const board = normalBoard.map((row) => row.map(() => -1));
@@ -108,29 +112,28 @@ const Home = () => {
               board[y][x] = q;
             }
           }
-          if (bombMap[y][x] === 0){
+          if (bombMap[y][x] === 0) {
             board[y][x] = 0;
-            chain(x, y, bombMap, board)
+            zeroChain(x, y, bombMap, board, lst2);
           }
         }
       }
     }
   };
-
   makeBoard(userInputs, bombMap, board);
   return (
     <div className={styles.container}>
       <div className={styles.flame}>
         <div className={styles.board}>
           {board.map((row, y) =>
-            row.map((bomNumber, x) => (
+            row.map((bombNumber, x) => (
               <div
                 className={styles.bombMap}
                 key={`${x}-${y}`}
                 onClick={() => clickHandler(x, y)}
-                style={{ backgroundPosition: ` ${-30 * (bomNumber - 1)}px 0px` }}
+                style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
               >
-                {bomNumber === -1 && (
+                {bombNumber === -1 && (
                   <div
                     className={styles.cell}
                     key={`${x}-${y}`}
