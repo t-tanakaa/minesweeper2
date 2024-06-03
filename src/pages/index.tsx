@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styles from './index.module.css';
+import styles from './index.module.css'
 const directions = [
   [-1, 1],
   [0, 1],
@@ -52,22 +52,41 @@ const numberSelect = (newBombMap: number[][]) => {
 };
 
 const zeroChain = (y: number, x: number, bombMap: number[][], board: number[][], lst2: number[][]) => {
-  const lst = [];
-  for (const direction of directions) {
-    const dx = x + direction[0];
-    const dy = y + direction[1];
-    if (bombMap[dy] !== undefined && bombMap[dy][dx] === 0) {
-      lst.push([dy, dx]);
-      lst2.push([dy, dx]);
-      console.log(lst2);
-    }
-  }
-  if (lst.length !== 0 && lst2 === lst) {
-    lst.map(([dy, dx]) => {
-      zeroChain(dy, dx, bombMap, board, lst2);
-    });
-  } else return;
-};
+  const lst:number[][] = [];
+for (const direction of directions){
+  const dx = x + direction[0];
+  const dy = y + direction[1];
+  if (bombMap[dy] !== undefined && bombMap[dy][dx] === 0) {
+  console.log(dx,dy);
+  lst.push([dx, dy]);
+  lst2.push([dx, dy]);
+  console.log(lst2);
+}
+}
+}
+
+
+
+
+
+
+//   for (const direction of directions) {
+//     const dx = x + direction[0];
+//     const dy = y + direction[1];
+//     console.log(dx,dy);
+
+//     if (bombMap[dy] !== undefined && bombMap[dy][dx] === 0) {
+//       lst.push([dy, dx]);
+//       lst2.push([dy, dx]);
+//       console.log(lst2);
+//     }
+//   }
+//   if (lst.length !== 0 && lst2 === lst) {
+//     lst.map(([dy, dx]) => {
+//       zeroChain(dy, dx, bombMap, board, lst2);
+//     });
+//   } else return;
+// };
 
 // bombMap[dy + direction[0]] !== undefined &&
 // bombMap[dy + direction[0]][dx + direction[1]] === 0
