@@ -30,7 +30,6 @@ const bomb = (y: number, x: number, newBombMap: number[][]) => {
       n++;
     }
   }
-  return bomb;
 };
 
 const numberSelect = (newBombMap: number[][]) => {
@@ -58,13 +57,18 @@ const zeroChain = (
   board: number[][],
   lst2: number[][],
 ) => {
-  for (const [dx, dy] of directions) {
-    if (newBombMap[y][x] === 0) {
-      if (newBombMap[dy + y] !== undefined && newBombMap[dy + y][dx + x] === 0 && !lst2.includes([x+dx,y+dy])) {
+  if (newBombMap[y][x] === 0) {
+    for (const [dx, dy] of directions) {
+      if (
+        newBombMap[dy + y] !== undefined &&
+        newBombMap[dy + y][dx + x] !== undefined &&
+        // newBombMap[dy + y][dx + x] !== 11 &&
+        !lst2.find((c) => c[0] === dx + x && c[1] === dy + y)
+      ) {
         lst2.push([dx + x, dy + y]);
+        zeroChain(dy + y, dx + x, newBombMap, board, lst2);
       }
     }
-    console.log(dx + x, dy + y);
   }
   console.log(lst2);
 };
@@ -109,11 +113,15 @@ const Home = () => {
     const newBombMap = structuredClone(bombMap);
     newUserInputs[y][x] = 1;
     //console.table(newUserInputs);
-    setUserInputs(newUserInputs);
     deployment(bombMap, y, x, newBombMap);
+    console.table(newBombMap);
     setBombMap(newBombMap);
-    console.table(newBombMap)
-    zeroChain(x, y, newBombMap, board, []);
+    const lst2: [number, number][] = [];
+    zeroChain(y, x, newBombMap, board, lst2);
+    for (const zeroNumber of lst2) {
+      newUserInputs[zeroNumber[1]][zeroNumber[0]] = 1;
+    }
+    setUserInputs(newUserInputs);
     //console.table(bombMap);
     //sconsole.table(board);
   };
