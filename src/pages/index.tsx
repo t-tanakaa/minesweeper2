@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styles from './index.module.css'
+import styles from './index.module.css';
 const directions = [
   [-1, 1],
   [0, 1],
@@ -51,24 +51,23 @@ const numberSelect = (newBombMap: number[][]) => {
   }
 };
 
-const zeroChain = (y: number, x: number, bombMap: number[][], board: number[][], lst2: number[][]) => {
-  const lst:number[][] = [];
-for (const direction of directions){
-  const dx = x + direction[0];
-  const dy = y + direction[1];
-  if (bombMap[dy] !== undefined && bombMap[dy][dx] === 0) {
-  console.log(dx,dy);
-  lst.push([dx, dy]);
-  lst2.push([dx, dy]);
+const zeroChain = (
+  y: number,
+  x: number,
+  newBombMap: number[][],
+  board: number[][],
+  lst2: number[][],
+) => {
+  for (const [dx, dy] of directions) {
+    if (newBombMap[y][x] === 0) {
+      if (newBombMap[dy + y] !== undefined && newBombMap[dy + y][dx + x] === 0 && !lst2.includes([x+dx,y+dy])) {
+        lst2.push([dx + x, dy + y]);
+      }
+    }
+    console.log(dx + x, dy + y);
+  }
   console.log(lst2);
-}
-}
-}
-
-
-
-
-
+};
 
 //   for (const direction of directions) {
 //     const dx = x + direction[0];
@@ -102,7 +101,6 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
-  const lst2: number[][] = [];
   const [userInputs, setUserInputs] = useState(normalBoard);
   const [bombMap, setBombMap] = useState(normalBoard);
   const board = normalBoard.map((row) => row.map(() => -1));
@@ -114,6 +112,8 @@ const Home = () => {
     setUserInputs(newUserInputs);
     deployment(bombMap, y, x, newBombMap);
     setBombMap(newBombMap);
+    console.table(newBombMap)
+    zeroChain(x, y, newBombMap, board, []);
     //console.table(bombMap);
     //sconsole.table(board);
   };
@@ -133,7 +133,6 @@ const Home = () => {
           }
           if (bombMap[y][x] === 0) {
             board[y][x] = 0;
-            zeroChain(x, y, bombMap, board, lst2);
           }
         }
       }
