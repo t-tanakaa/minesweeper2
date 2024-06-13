@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import styles from './index.module.css';
-
 const directions = [
   [-1, 1],
   [0, 1],
@@ -151,6 +150,11 @@ const Home = () => {
     }
   };
   makeBoard(userInputs, bombMap, board);
+  //右クリックについて
+  //新しい関数を作る
+  //DIVと同期させる
+  //
+  //
   return (
     <div className={styles.container}>
       <div className={styles.flame}>
@@ -162,6 +166,7 @@ const Home = () => {
                 key={`${x}-${y}`}
                 onClick={() => clickHandler(x, y)}
                 style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
+                onContextMenu={() => clickHandler(x, y)}
               >
                 {bombNumber === -1 && (
                   <div
