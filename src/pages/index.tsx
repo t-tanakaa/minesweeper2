@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './index.module.css';
+
 const directions = [
   [-1, 1],
   [0, 1],
@@ -73,6 +74,11 @@ const zeroChain = (
   console.log(lst2);
 };
 
+const zeroIndication = (lst2: [number, number][], newUserInputs: number[][]) => {
+  for (const zeroNumber of lst2) {
+    newUserInputs[zeroNumber[1]][zeroNumber[0]] = 1;
+  }
+};
 //   for (const direction of directions) {
 //     const dx = x + direction[0];
 //     const dy = y + direction[1];
@@ -118,9 +124,7 @@ const Home = () => {
     setBombMap(newBombMap);
     const lst2: [number, number][] = [];
     zeroChain(y, x, newBombMap, board, lst2);
-    for (const zeroNumber of lst2) {
-      newUserInputs[zeroNumber[1]][zeroNumber[0]] = 1;
-    }
+    zeroIndication(lst2, newUserInputs);
     setUserInputs(newUserInputs);
     //console.table(bombMap);
     //sconsole.table(board);
