@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styles from './index.module.css';
 const directions = [
   [-1, 1],
@@ -129,6 +129,10 @@ const Home = () => {
     //sconsole.table(board);
   };
 
+  const rightcrick = (event: React.MouseEvent<HTMLDivElement>, x: number, y: number) => {
+    event.preventDefault();
+  };
+
   const makeBoard = (userInput: number[][], bombMap: number[][], board: number[][]) => {
     for (let y = 0; y < 9; y++) {
       for (let x = 0; x < 9; x++) {
@@ -166,7 +170,7 @@ const Home = () => {
                 key={`${x}-${y}`}
                 onClick={() => clickHandler(x, y)}
                 style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
-                onContextMenu={() => clickHandler(x, y)}
+                onContextMenu={(event) => rightcrick(event, x, y)}
               >
                 {bombNumber === -1 && (
                   <div
