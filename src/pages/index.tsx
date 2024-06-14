@@ -120,7 +120,8 @@ const Home = () => {
           if (bombMap[y][x] === -1) {
             for (let y = 0; y < 9; y++) {
               for (let x = 0; x < 9; x++) {
-                if (bombMap[y][x] === -1) {
+                if (bombMap[y][x] === -1 || userInputs[y][x] === 2) {
+                  userInput[y][x] = 1;
                   board[y][x] = 11;
                 }
               }
@@ -143,6 +144,7 @@ const Home = () => {
   };
   makeBoard(userInputs, bombMap, board);
   console.table(bombMap);
+  console.table(userInputs);
   return (
     <div className={styles.container}>
       <div className={styles.flame}>
