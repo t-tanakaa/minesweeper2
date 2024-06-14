@@ -62,7 +62,6 @@ const zeroChain = (
       if (
         newBombMap[dy + y] !== undefined &&
         newBombMap[dy + y][dx + x] !== undefined &&
-        // newBombMap[dy + y][dx + x] !== 11 &&
         !lst2.find((c) => c[0] === dx + x && c[1] === dy + y)
       ) {
         lst2.push([dx + x, dy + y]);
@@ -78,26 +77,7 @@ const zeroIndication = (lst2: [number, number][], newUserInputs: number[][]) => 
     newUserInputs[zeroNumber[1]][zeroNumber[0]] = 1;
   }
 };
-//   for (const direction of directions) {
-//     const dx = x + direction[0];
-//     const dy = y + direction[1];
-//     console.log(dx,dy);
 
-//     if (bombMap[dy] !== undefined && bombMap[dy][dx] === 0) {
-//       lst.push([dy, dx]);
-//       lst2.push([dy, dx]);
-//       console.log(lst2);
-//     }
-//   }
-//   if (lst.length !== 0 && lst2 === lst) {
-//     lst.map(([dy, dx]) => {
-//       zeroChain(dy, dx, bombMap, board, lst2);
-//     });
-//   } else return;
-// };
-
-// bombMap[dy + direction[0]] !== undefined &&
-// bombMap[dy + direction[0]][dx + direction[1]] === 0
 const Home = () => {
   const normalBoard = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -129,8 +109,15 @@ const Home = () => {
     //sconsole.table(board);
   };
 
-  const rightcrick = (event: React.MouseEvent<HTMLDivElement>, x: number, y: number) => {
+  const rightClick = (event: React.MouseEvent<HTMLDivElement>, x: number, y: number) => {
     event.preventDefault();
+    const newUserInputs = structuredClone(userInputs);
+    if (userInputs[y][x] === 0) {
+      newUserInputs[y][x] = 2; // 旗を置く
+    } else if (userInputs[y][x] === 2) {
+      newUserInputs[y][x] = 0; // 旗を解除
+    }
+    setUserInputs(newUserInputs);
   };
 
   const makeBoard = (userInput: number[][], bombMap: number[][], board: number[][]) => {
@@ -148,6 +135,9 @@ const Home = () => {
           }
           if (bombMap[y][x] === 0) {
             board[y][x] = 0;
+          }
+          if (userInput[y][x] === 2) {
+            board[y][x] = 12;
           }
         }
       }
@@ -168,17 +158,21 @@ const Home = () => {
               <div
                 className={styles.bombMap}
                 key={`${x}-${y}`}
-                onClick={() => clickHandler(x, y)}
                 style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
-                onContextMenu={(event) => rightcrick(event, x, y)}
               >
-                {bombNumber === -1 && (
+                {(bombNumber === -1 || bombNumber === 12) && (
                   <div
-                    className={styles.cell}
-                    key={`${x}-${y}`}
+                    className={styles.stone}
                     onClick={() => clickHandler(x, y)}
-                  />
+                    onContextMenu={(event) => rightClick(event, x, y)}
+                  >
+                    <div
+                      className={styles.bombMap}
+                      style={{ backgroundPosition: ` ${-30 * (bombNumber - 10)}px 0px` }}
+                    />
+                  </div>
                 )}
+                {bombNumber !== -1 && bombNumber !== 12 && bombNumber !== -1 && <div>{bombNumber}</div>}
               </div>
             )),
           )}

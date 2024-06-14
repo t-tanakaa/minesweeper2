@@ -39,7 +39,7 @@
   background: url('~/src/assets/images/icons.png') no-repeat;
 }
 
-.cell {
+.stone {
   box-sizing: border-box;
   width: 30px;
   height: 30px;
