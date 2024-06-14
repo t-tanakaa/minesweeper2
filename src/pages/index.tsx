@@ -147,6 +147,7 @@ const Home = () => {
   console.table(userInputs);
   return (
     <div className={styles.container}>
+      <div className={styles.worldWar}>
       <div className={styles.flame}>
         <div className={styles.board}>
           {board.map((row, y) =>
@@ -163,7 +164,7 @@ const Home = () => {
                     onContextMenu={(event) => rightClickHandler(event, x, y)}
                   >
                     <div
-                      className={styles.bombMap}
+                      className={styles.bombMapFlag}
                       style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
                     />
                   </div>
@@ -172,6 +173,7 @@ const Home = () => {
             )),
           )}
         </div>
+      </div>
       </div>
     </div>
   );
