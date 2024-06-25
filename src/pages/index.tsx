@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './index.module.css';
+
 const directions = [
   [-1, 1],
   [0, 1],
@@ -131,7 +132,7 @@ const Home = () => {
                 }
                 if (bombMap[y][x] === -1 && userInputs[y][x] === 1) {
                   //ボムを赤くする
-
+                  board[y][x] = 13;
                 }
               }
             }
@@ -157,31 +158,30 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div className={styles.worldWar}>
-        <div className={styles.flame}>
-          <div className={styles.board}>
-            {board.map((row, y) =>
-              row.map((bombNumber, x) => (
-                <div
-                  className={styles.bombMap}
-                  key={`${x}-${y}`}
-                  style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
-                >
-                  {(bombNumber === -1 || bombNumber === 10 || bombNumber === 20) && (
-                    <div
-                      className={styles.stone}
-                      onClick={() => clickHandler(x, y)}
-                      onContextMenu={(event) => rightClickHandler(event, x, y)}
-                    >
-                      <div
-                        className={styles.bombMapFlag}
-                        style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
-                      />
-                    </div>
-                  )}
-                </div>
-              )),
-            )}
-          </div>
+        <div className={styles.flame} />
+        <div className={styles.board}>
+          {board.map((row, y) =>
+            row.map((bombNumber, x) => (
+              <div
+                className={styles.bombMap}
+                key={`${x}-${y}`}
+                style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
+              >
+                {(bombNumber === -1 || bombNumber === 10 || bombNumber === 20) && (
+                  <div
+                    className={styles.stone}
+                    onClick={() => clickHandler(x, y)}
+                    onContextMenu={(event) => rightClickHandler(event, x, y)}
+                  >
+                  <div
+                      className={styles.bombMapFlag}
+                      style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
+                    />
+                  </div>
+                )}
+              </div>
+            )),
+          )}
         </div>
       </div>
     </div>
