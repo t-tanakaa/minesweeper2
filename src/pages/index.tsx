@@ -88,7 +88,7 @@ const Home = () => {
   const [bombMap, setBombMap] = useState(normalBoard);
   const board = normalBoard.map((row) => row.map(() => -1));
   const clickHandler = (x: number, y: number) => {
-    if (userInputs[y][x] === 2) {
+    if (userInputs[y][x] === 2 || board[y][x] === 20) {
       return;
     }
     const newUserInputs = structuredClone(userInputs);
@@ -104,11 +104,14 @@ const Home = () => {
   const rightClickHandler = (event: React.MouseEvent<HTMLDivElement>, x: number, y: number) => {
     event.preventDefault();
     const newUserInputs = structuredClone(userInputs);
-    if (userInputs[y][x] === 0) {
-      newUserInputs[y][x] = 2; // 旗を置く
-    } else if (userInputs[y][x] === 2) {
-      newUserInputs[y][x] = 0; // 旗を解除
+    if (board[y][x] !== 20) {
+      if (userInputs[y][x] === 0) {
+        newUserInputs[y][x] = 2; // 旗を置く
+      } else if (userInputs[y][x] === 2) {
+        newUserInputs[y][x] = 0; // 旗を解除
+      }
     }
+
     setUserInputs(newUserInputs);
   };
   const makeBoard = (userInput: number[][], bombMap: number[][], board: number[][]) => {
@@ -120,9 +123,15 @@ const Home = () => {
           if (bombMap[y][x] === -1) {
             for (let y = 0; y < 9; y++) {
               for (let x = 0; x < 9; x++) {
-                if (bombMap[y][x] === -1 || userInputs[y][x] === 2) {
-                  userInput[y][x] = 1;
+                if (bombMap[y][x] === -1 && userInputs[y][x] !== 2) {
                   board[y][x] = 11;
+                }
+                if (board[y][x] === -1) {
+                  board[y][x] = 20;
+                }
+                if (bombMap[y][x] === -1 && userInputs[y][x] === 1) {
+                  //ボムを赤くする
+
                 }
               }
             }
@@ -148,32 +157,32 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div className={styles.worldWar}>
-      <div className={styles.flame}>
-        <div className={styles.board}>
-          {board.map((row, y) =>
-            row.map((bombNumber, x) => (
-              <div
-                className={styles.bombMap}
-                key={`${x}-${y}`}
-                style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
-              >
-                {(bombNumber === -1 || bombNumber === 10) && (
-                  <div
-                    className={styles.stone}
-                    onClick={() => clickHandler(x, y)}
-                    onContextMenu={(event) => rightClickHandler(event, x, y)}
-                  >
+        <div className={styles.flame}>
+          <div className={styles.board}>
+            {board.map((row, y) =>
+              row.map((bombNumber, x) => (
+                <div
+                  className={styles.bombMap}
+                  key={`${x}-${y}`}
+                  style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
+                >
+                  {(bombNumber === -1 || bombNumber === 10 || bombNumber === 20) && (
                     <div
-                      className={styles.bombMapFlag}
-                      style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
-                    />
-                  </div>
-                )}
-              </div>
-            )),
-          )}
+                      className={styles.stone}
+                      onClick={() => clickHandler(x, y)}
+                      onContextMenu={(event) => rightClickHandler(event, x, y)}
+                    >
+                      <div
+                        className={styles.bombMapFlag}
+                        style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )),
+            )}
+          </div>
         </div>
-      </div>
       </div>
     </div>
   );

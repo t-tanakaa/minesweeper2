@@ -8,9 +8,9 @@
   padding: 0 0.5rem;
 }
 
-.worldWar{
-
-
+.worldWar {
+  width: 280px;
+  height: 28px;
 }
 
 .flame {
@@ -42,6 +42,7 @@
   width: 30px;
   height: 30px;
   background: url('~/src/assets/images/icons.png') no-repeat;
+  background-color: rgb(198 198 198);
 }
 
 .bombMapFlag {
