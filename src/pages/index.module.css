@@ -13,8 +13,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  width: 392px;
-  height: 492px;
+  width: 320px;
+  height: 420px;
   background-color: rgb(198 198 198);
   border: solid 5px;
   border-color: rgb(255 255 255) rgb(128 128 128) rgb(128 128 128) rgb(255 255 255);
@@ -51,8 +51,8 @@
 
 .bombMap {
   box-sizing: border-box;
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   background: url('~/src/assets/images/icons.png') no-repeat;
   background-color: rgb(198 198 198);
   border: solid 1px;
@@ -61,17 +61,15 @@
 
 .bombMapFlag {
   box-sizing: border-box;
-  width: 34px;
-  height: 34px;
-  background: url('~/src/assets/images/icons.png') no-repeat;
-  background-repeat: no-repeat;
-  background-origin: border-box;
+  width: 30px;
+  height: 30px;
+  background: url('~/src/assets/images/flag2.png') no-repeat;
 }
 
 .stone {
   box-sizing: border-box;
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   background-color: rgb(198 198 198);
   border: 4px solid;
   border-color: rgb(255 255 255) rgb(128 128 128) rgb(128 128 128) rgb(255 255 255);
@@ -82,8 +80,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  width: 316px;
-  height: 316px;
+  width: 280px;
+  height: 280px;
   margin: 15px;
   background-color: rgb(198 198 198);
   border: solid 5px;
