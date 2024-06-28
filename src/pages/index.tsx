@@ -188,7 +188,10 @@ const Home = () => {
               <div
                 className={styles.bombMap}
                 key={`${x}-${y}`}
-                style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
+                style={{
+                  backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px`,
+                  backgroundColor: bombMap[y][x] === -1 && userInputs[y][x] === 1 ? 'red' : '',
+                }}
               >
                 {(bombNumber === -1 || bombNumber === 10 || bombNumber === 20) && (
                   <div
