@@ -61,6 +61,10 @@
   border-color: rgb(255 255 255) rgb(128 128 128) rgb(128 128 128) rgb(255 255 255);
 }
 
+.smile:active {
+  border-color: rgb(128 128 128) rgb(255 255 255) rgb(255 255 255) rgb(128 128 128);
+}
+
 .bombMap {
   box-sizing: border-box;
   width: 30px;
