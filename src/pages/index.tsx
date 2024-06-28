@@ -75,21 +75,15 @@ const zeroIndication = (lst2: [number, number][], newUserInputs: number[][]) => 
 };
 
 const Home = () => {
-  const normalBoard = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ];
-  const [userInputs, setUserInputs] = useState(normalBoard);
-  const [bombMap, setBombMap] = useState(normalBoard);
-  const board = normalBoard.map((row) => row.map(() => -1));
+  const generateBoard = (width: number, height: number, fill: number) =>
+    Array.from({ length: height }, () => Array.from({ length: width }, () => fill));
+
+  const [userInputs, setUserInputs] = useState(generateBoard(9, 9, 0));
+  const [bombMap, setBombMap] = useState(generateBoard(9, 9, 0));
+  const board = userInputs.map((row) => row.map(() => -1));
   const [time, setTime] = useState(0);
+  const width = userInputs[0].length;
+  const height = userInputs.length;
   const clickHandler = (x: number, y: number) => {
     if (userInputs[y][x] === 2 || board[y][x] === 20) {
       return;
@@ -168,16 +162,32 @@ const Home = () => {
   console.table(bombMap);
   return (
     <div className={styles.container}>
+      <button onClick={() => {}}>easy</button>
+      <button
+        onClick={() => {
+          setUserInputs(generateBoard(16, 16, 0));
+          setBombMap(generateBoard(16, 16, 0));
+        }}
+      >
+        normal
+      </button>
+      <button onClick={() => {}}>hard</button>
       <div className={styles.worldWar}>
         <div className={styles.flame}>
           <div className={styles.boomNumber}>{10}</div>
           <div
             className={styles.smile}
             onClick={() => {
-              setBombMap(normalBoard);
-              setUserInputs(normalBoard);
+              setBombMap(generateBoard(9, 9, 0));
+              setUserInputs(generateBoard(9, 9, 0));
             }}
-            style={{ backgroundPosition: ` ${-30 * 11}px 0px` }}
+            style={{
+              backgroundPosition: isClear
+                ? ` ${-30 * 12}px 0px`
+                : isFailed
+                  ? ` ${-30 * 13}px 0px`
+                  : ` ${-30 * 11}px 0px`,
+            }}
           />
           <div className={styles.timer}>{time}</div>
         </div>
