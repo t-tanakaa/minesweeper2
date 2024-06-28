@@ -132,7 +132,7 @@ const Home = () => {
                 }
                 if (bombMap[y][x] === -1 && userInputs[y][x] === 1) {
                   //ボムを赤くする
-                  board[y][x] = 13;
+                  board[y][x] = 11;
                 }
               }
             }
@@ -158,7 +158,12 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div className={styles.worldWar}>
-        <div className={styles.flame} />
+        <div className={styles.flame}>
+          <div className={styles.boomNumber} />
+          <div className={styles.smile} />
+          <div className={styles.timer} />
+        </div>
+
         <div className={styles.board}>
           {board.map((row, y) =>
             row.map((bombNumber, x) => (
@@ -173,7 +178,7 @@ const Home = () => {
                     onClick={() => clickHandler(x, y)}
                     onContextMenu={(event) => rightClickHandler(event, x, y)}
                   >
-                  <div
+                    <div
                       className={styles.bombMapFlag}
                       style={{ backgroundPosition: ` ${-30 * (bombNumber - 1)}px 0px` }}
                     />
