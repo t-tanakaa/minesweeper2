@@ -21,6 +21,7 @@
 }
 
 .flame {
+  display: flex;
   width: 280px;
   height: 62px;
   margin-top: 15px;
@@ -36,7 +37,7 @@
   width: 80px;
   height: 42px;
   margin: 5px;
-  background-color: black;
+  background-color: rgb(255 255 255);
   border: 3px solid;
   border-color: rgb(128 128 128) rgb(255 255 255) rgb(255 255 255) rgb(128 128 128);
 }
@@ -46,7 +47,7 @@
   width: 80px;
   height: 42px;
   margin: 5px;
-  background-color: black;
+  background-color: rgb(255, 255, 255);
   border: 3px solid;
   border-color: rgb(128 128 128) rgb(255 255 255) rgb(255 255 255) rgb(128 128 128);
 }

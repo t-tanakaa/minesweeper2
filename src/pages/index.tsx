@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './index.module.css';
 
 const directions = [
@@ -11,9 +11,10 @@ const directions = [
   [-1, -1],
   [-1, 0],
 ];
+
 const deployment = (bombMap: number[][], y: number, x: number, newBombMap: number[][]) => {
-  const total = bombMap.flat().every((value) => value === 0);
-  if (total === true) {
+  const isStart = bombMap.flat().every((value) => value === 0);
+  if (isStart) {
     bomb(y, x, newBombMap);
     numberSelect(newBombMap);
   }
@@ -88,6 +89,7 @@ const Home = () => {
   const [userInputs, setUserInputs] = useState(normalBoard);
   const [bombMap, setBombMap] = useState(normalBoard);
   const board = normalBoard.map((row) => row.map(() => -1));
+  const [time, setTime] = useState(0);
   const clickHandler = (x: number, y: number) => {
     if (userInputs[y][x] === 2 || board[y][x] === 20) {
       return;
@@ -153,18 +155,31 @@ const Home = () => {
     }
   };
   makeBoard(userInputs, bombMap, board);
+  const isClear = board.flat().filter((v) => ![-1, 10].includes(v)).length === 81 - 10;
+  const isFailed = board.flat().some((value) => value === 11);
+  useEffect(() => {
+    if (!bombMap.flat().every((value) => value === 0) && !isClear && !isFailed) {
+      const id = setInterval(() => {
+        setTime((t) => t + 1);
+      }, 1000);
+      return () => clearInterval(id);
+    }
+  }, [bombMap, isClear, isFailed]);
   console.table(bombMap);
-  console.table(userInputs);
   return (
     <div className={styles.container}>
       <div className={styles.worldWar}>
         <div className={styles.flame}>
-          <div className={styles.boomNumber} />
+          <div className={styles.boomNumber}>{10}</div>
           <div
             className={styles.smile}
-            style={{ backgroundPosition: ` ${-30 * (11)}px 0px` }}
+            onClick={() => {
+              setBombMap(normalBoard);
+              setUserInputs(normalBoard);
+            }}
+            style={{ backgroundPosition: ` ${-30 * 11}px 0px` }}
           />
-          <div className={styles.timer} />
+          <div className={styles.timer}>{time}</div>
         </div>
 
         <div className={styles.board}>
