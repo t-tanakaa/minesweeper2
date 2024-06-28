@@ -160,7 +160,10 @@ const Home = () => {
       <div className={styles.worldWar}>
         <div className={styles.flame}>
           <div className={styles.boomNumber} />
-          <div className={styles.smile} />
+          <div
+            className={styles.smile}
+            style={{ backgroundPosition: ` ${-30 * (11)}px 0px` }}
+          />
           <div className={styles.timer} />
         </div>
 
