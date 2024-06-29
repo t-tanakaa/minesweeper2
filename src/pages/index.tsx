@@ -78,12 +78,12 @@ const Home = () => {
   const generateBoard = (width: number, height: number, fill: number) =>
     Array.from({ length: height }, () => Array.from({ length: width }, () => fill));
 
-  const [userInputs, setUserInputs] = useState(generateBoard(9, 9, 0));
+  const [userInputs, setUserInputs] = useState(generateBoard(9,9, 0));
   const [bombMap, setBombMap] = useState(generateBoard(9, 9, 0));
   const board = userInputs.map((row) => row.map(() => -1));
   const [time, setTime] = useState(0);
-  const width = userInputs[0].length;
-  const height = userInputs.length;
+  const width:number = userInputs[0].length;
+  const height:number = userInputs.length;
   const clickHandler = (x: number, y: number) => {
     if (userInputs[y][x] === 2 || board[y][x] === 20) {
       return;
@@ -112,14 +112,14 @@ const Home = () => {
     setUserInputs(newUserInputs);
   };
   const makeBoard = (userInput: number[][], bombMap: number[][], board: number[][]) => {
-    for (let y = 0; y < 9; y++) {
-      for (let x = 0; x < 9; x++) {
+    for (let y = 0; y < width; y++) {
+      for (let x = 0; x < height; x++) {
         //ボム連鎖のコードが気持ち悪いから改善の余地あり
         if (userInput[y][x] === 1) {
           board[y][x] = 1;
           if (bombMap[y][x] === -1) {
-            for (let y = 0; y < 9; y++) {
-              for (let x = 0; x < 9; x++) {
+            for (let y = 0; y < width; y++) {
+              for (let x = 0; x < height; x++) {
                 if (bombMap[y][x] === -1 && userInputs[y][x] !== 2) {
                   board[y][x] = 11;
                 }
