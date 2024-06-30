@@ -12,27 +12,42 @@ const directions = [
   [-1, 0],
 ];
 
-const deployment = (bombMap: number[][], y: number, x: number, newBombMap: number[][]) => {
+const deployment = (
+  bombMap: number[][],
+  y: number,
+  x: number,
+  newBombMap: number[][],
+  height: number,
+  width: number,
+  bombCount: number,
+) => {
   const isStart = bombMap.flat().every((value) => value === 0);
   if (isStart) {
-    bomb(y, x, newBombMap);
-    numberSelect(newBombMap);
+    bomb(y, x, newBombMap, height, width, bombCount);
+    numberSelect(newBombMap, height, width);
   }
 };
-const bomb = (y: number, x: number, newBombMap: number[][]) => {
+const bomb = (
+  y: number,
+  x: number,
+  newBombMap: number[][],
+  height: number,
+  width: number,
+  bombCount: number,
+) => {
   let n = 0;
-  while (10 > n) {
-    const row = Math.floor(Math.random() * 9);
-    const col = Math.floor(Math.random() * 9);
+  while (bombCount > n) {
+    const row = Math.floor(Math.random() * height);
+    const col = Math.floor(Math.random() * width);
     if (newBombMap[row][col] !== -1 && y !== row && x !== col) {
       newBombMap[row][col] = -1;
       n++;
     }
   }
 };
-const numberSelect = (bombMap: number[][]) => {
-  for (let dy = 0; dy < 9; dy++) {
-    for (let dx = 0; dx < 9; dx++) {
+const numberSelect = (bombMap: number[][], height: number, width: number) => {
+  for (let dy = 0; dy < height; dy++) {
+    for (let dx = 0; dx < width; dx++) {
       if (bombMap[dy][dx] === -1) {
         continue;
       }
@@ -78,12 +93,14 @@ const Home = () => {
   const generateBoard = (width: number, height: number, fill: number) =>
     Array.from({ length: height }, () => Array.from({ length: width }, () => fill));
 
-  const [userInputs, setUserInputs] = useState(generateBoard(9,9, 0));
+  const [userInputs, setUserInputs] = useState(generateBoard(9, 9, 0));
   const [bombMap, setBombMap] = useState(generateBoard(9, 9, 0));
+  const [difficulty, setDifficulty] = useState('easy');
+  const [bombCount, setBombCount] = useState(10);
   const board = userInputs.map((row) => row.map(() => -1));
   const [time, setTime] = useState(0);
-  const width:number = userInputs[0].length;
-  const height:number = userInputs.length;
+  const width: number = userInputs[0].length;
+  const height: number = userInputs.length;
   const clickHandler = (x: number, y: number) => {
     if (userInputs[y][x] === 2 || board[y][x] === 20) {
       return;
@@ -91,7 +108,7 @@ const Home = () => {
     const newUserInputs = structuredClone(userInputs);
     const newBombMap = structuredClone(bombMap);
     newUserInputs[y][x] = 1;
-    deployment(bombMap, y, x, newBombMap);
+    deployment(bombMap, y, x, newBombMap, height, width, bombCount);
     setBombMap(newBombMap);
     const lst2: [number, number][] = [];
     zeroChain(y, x, newBombMap, board, lst2);
@@ -112,23 +129,21 @@ const Home = () => {
     setUserInputs(newUserInputs);
   };
   const makeBoard = (userInput: number[][], bombMap: number[][], board: number[][]) => {
-    for (let y = 0; y < width; y++) {
-      for (let x = 0; x < height; x++) {
-        //ボム連鎖のコードが気持ち悪いから改善の余地あり
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
         if (userInput[y][x] === 1) {
           board[y][x] = 1;
           if (bombMap[y][x] === -1) {
-            for (let y = 0; y < width; y++) {
-              for (let x = 0; x < height; x++) {
-                if (bombMap[y][x] === -1 && userInputs[y][x] !== 2) {
-                  board[y][x] = 11;
+            for (let yy = 0; yy < height; yy++) {
+              for (let xx = 0; xx < width; xx++) {
+                if (bombMap[yy][xx] === -1 && userInputs[yy][xx] !== 2) {
+                  board[yy][xx] = 11;
                 }
-                if (board[y][x] === -1) {
-                  board[y][x] = 20;
+                if (board[yy][xx] === -1) {
+                  board[yy][xx] = 20;
                 }
-                if (bombMap[y][x] === -1 && userInputs[y][x] === 1) {
-                  //ボムを赤くする
-                  board[y][x] = 11;
+                if (bombMap[yy][xx] === -1 && userInputs[yy][xx] === 1) {
+                  board[yy][xx] = 11;
                 }
               }
             }
@@ -149,8 +164,14 @@ const Home = () => {
     }
   };
   makeBoard(userInputs, bombMap, board);
+  const handleClick = (width: number, height: number, bombCount: number, level) => {
+    setUserInputs(generateBoard(width, height, 0));
+    setBombMap(generateBoard(width, height, 0));
+    setDifficulty(level);
+    setBombCount(bombCount);
+  };
 
-  const isClear = board.flat().filter((v) => ![-1, 10].includes(v)).length === 81 - 10;
+  const isClear = board.flat().filter((v) => ![-1, 10].includes(v)).length === height*width - bombCount;
   const isFailed = board.flat().some((value) => value === 11);
   useEffect(() => {
     if (!bombMap.flat().every((value) => value === 0) && !isClear && !isFailed) {
@@ -163,26 +184,34 @@ const Home = () => {
   console.table(bombMap);
   return (
     <div className={styles.container}>
-      <button onClick={() => {}}>easy</button>
-      <button
-        onClick={() => {
-          setUserInputs(generateBoard(16, 16, 0));
-          setBombMap(generateBoard(16, 16, 0));
+      <button onClick={() => handleClick(9, 9, 10, 'easy')}>easy</button>
+      <button onClick={() => handleClick(16, 16, 40, 'normal')}>normal</button>
+      <button onClick={() => handleClick(30, 16, 99, 'hard')}>hard</button>
+      <button onClick={() => handleClick(30, 16, 99, 'hard')}>幅</button>
+      <button onClick={() => handleClick(30, 16, 99, 'hard')}>高さ</button>
+      <button onClick={() => handleClick(30, 16, 99, 'hard')}>ボム</button>
+      <button onClick={() => handleClick(30, 16, 99, 'hard')}>hard</button>
+      <div
+        className={styles.worldWar}
+        style={{
+          width: difficulty === 'easy' ? '320px' : difficulty === 'normal' ? '600px' : '950px',
+          height: difficulty === 'easy' ? '400px' : difficulty === 'normal' ? '600px' : '610px',
         }}
       >
-        normal
-      </button>
-      <button onClick={() => {}}>hard</button>
-      <div className={styles.worldWar}>
-        <div className={styles.flame}>
+        <div
+          className={styles.flame}
+          style={{
+            width: difficulty === 'easy' ? '270px' : difficulty === 'normal' ? '480px' : '900px',
+          }}
+        >
           <div className={styles.boomNumber}>{10}</div>
           <div
             className={styles.smile}
-
             onClick={() => {
-              setBombMap(generateBoard(9, 9, 0));
-              setUserInputs(generateBoard(9, 9, 0));
-              {setTime(0)};
+              handleClick(width, height, bombCount, '')
+              {
+                setTime(0);
+              }
             }}
             style={{
               backgroundPosition: isClear
@@ -195,7 +224,13 @@ const Home = () => {
           <div className={styles.timer}>{time}</div>
         </div>
 
-        <div className={styles.board}>
+        <div
+          className={styles.board}
+          style={{
+            width: difficulty === 'easy' ? '280px' : difficulty === 'normal' ? '490px' : '910px',
+            height: difficulty === 'easy' ? '280px' : difficulty === 'normal' ? '490px' : '490px',
+          }}
+        >
           {board.map((row, y) =>
             row.map((bombNumber, x) => (
               <div
