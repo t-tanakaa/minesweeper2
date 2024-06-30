@@ -149,6 +149,7 @@ const Home = () => {
     }
   };
   makeBoard(userInputs, bombMap, board);
+
   const isClear = board.flat().filter((v) => ![-1, 10].includes(v)).length === 81 - 10;
   const isFailed = board.flat().some((value) => value === 11);
   useEffect(() => {
@@ -177,9 +178,11 @@ const Home = () => {
           <div className={styles.boomNumber}>{10}</div>
           <div
             className={styles.smile}
+
             onClick={() => {
               setBombMap(generateBoard(9, 9, 0));
               setUserInputs(generateBoard(9, 9, 0));
+              {setTime(0)};
             }}
             style={{
               backgroundPosition: isClear
