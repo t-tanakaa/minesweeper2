@@ -171,7 +171,8 @@ const Home = () => {
     setBombCount(bombCount);
   };
 
-  const isClear = board.flat().filter((v) => ![-1, 10].includes(v)).length === height*width - bombCount;
+  const isClear =
+    board.flat().filter((v) => ![-1, 10].includes(v)).length === height * width - bombCount;
   const isFailed = board.flat().some((value) => value === 11);
   useEffect(() => {
     if (!bombMap.flat().every((value) => value === 0) && !isClear && !isFailed) {
@@ -194,21 +195,25 @@ const Home = () => {
       <div
         className={styles.worldWar}
         style={{
-          width: difficulty === 'easy' ? '320px' : difficulty === 'normal' ? '600px' : '950px',
+          width: difficulty === 'easy' ? '320px' : difficulty === 'normal' ? '530px' : '950px',
           height: difficulty === 'easy' ? '400px' : difficulty === 'normal' ? '600px' : '610px',
         }}
       >
         <div
           className={styles.flame}
           style={{
-            width: difficulty === 'easy' ? '270px' : difficulty === 'normal' ? '480px' : '900px',
+            width: difficulty === 'easy' ? '280px' : difficulty === 'normal' ? '490px' : '910px',
           }}
         >
           <div className={styles.boomNumber}>{10}</div>
           <div
             className={styles.smile}
             onClick={() => {
-              handleClick(width, height, bombCount, '')
+              difficulty === 'easy'
+                ? handleClick(9, 9, 10, 'easy')
+                : difficulty === 'normal'
+                  ? handleClick(16, 16, 40, 'normal')
+                  : handleClick(30, 16, 99, 'hard');
               {
                 setTime(0);
               }
