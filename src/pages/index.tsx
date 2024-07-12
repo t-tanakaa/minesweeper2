@@ -1,3 +1,4 @@
+import type { SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
 import styles from './index.module.css';
 
@@ -97,6 +98,9 @@ const Home = () => {
   const [bombMap, setBombMap] = useState(generateBoard(9, 9, 0));
   const [difficulty, setDifficulty] = useState('easy');
   const [bombCount, setBombCount] = useState(10);
+  const [inputWidth, setInputWidth] = useState(9);
+  const [inputHeight, setInputHeight] = useState(9);
+  const [inputBombCount, setInputBombCount] = useState(10);
   const board = userInputs.map((row) => row.map(() => -1));
   const [time, setTime] = useState(0);
   const width: number = userInputs[0].length;
@@ -115,7 +119,14 @@ const Home = () => {
     zeroIndication(lst2, newUserInputs);
     setUserInputs(newUserInputs);
   };
-  const rightClickHandler = (event: React.MouseEvent<HTMLDivElement>, x: number, y: number) => {
+
+  const rightClickHandler = (
+    event: React.MouseEvent<HTMLDivElement>,
+    x: number,
+    y: number,
+    height: number,
+    width: number,
+  ) => {
     event.preventDefault();
     const newUserInputs = structuredClone(userInputs);
     if (board[y][x] !== 20) {
@@ -125,7 +136,11 @@ const Home = () => {
         newUserInputs[y][x] = 0; // 旗を解除
       }
     }
-
+    for (let yy = 0; yy < height; yy++) {
+      for (let xx = 0; xx < width; xx++) {
+        userInputs[yy][xx] === 2;
+      }
+    }
     setUserInputs(newUserInputs);
   };
   const makeBoard = (userInput: number[][], bombMap: number[][], board: number[][]) => {
@@ -164,7 +179,12 @@ const Home = () => {
     }
   };
   makeBoard(userInputs, bombMap, board);
-  const handleClick = (width: number, height: number, bombCount: number, level) => {
+  const handleClick = (
+    width: number,
+    height: number,
+    bombCount: number,
+    level: SetStateAction<string>,
+  ) => {
     setUserInputs(generateBoard(width, height, 0));
     setBombMap(generateBoard(width, height, 0));
     setDifficulty(level);
@@ -182,30 +202,71 @@ const Home = () => {
       return () => clearInterval(id);
     }
   }, [bombMap, isClear, isFailed]);
-  console.table(bombMap);
   return (
     <div className={styles.container}>
       <button onClick={() => handleClick(9, 9, 10, 'easy')}>easy</button>
       <button onClick={() => handleClick(16, 16, 40, 'normal')}>normal</button>
       <button onClick={() => handleClick(30, 16, 99, 'hard')}>hard</button>
-      <button onClick={() => handleClick(30, 16, 99, 'hard')}>幅</button>
-      <button onClick={() => handleClick(30, 16, 99, 'hard')}>高さ</button>
-      <button onClick={() => handleClick(30, 16, 99, 'hard')}>ボム</button>
-      <button onClick={() => handleClick(30, 16, 99, 'hard')}>hard</button>
+      <button onClick={() => handleClick(inputWidth, inputHeight, inputBombCount, 'custom')}>
+        custom
+      </button>
+      <input
+        type="number"
+        value={inputWidth}
+        onChange={(event) => setInputWidth(parseInt(event.target.value))}
+      />
+      <input
+        type="number"
+        value={inputHeight}
+        onChange={(event) => setInputHeight(parseInt(event.target.value))}
+      />
+      <input
+        type="number"
+        value={inputBombCount}
+        onChange={(event) => setInputBombCount(parseInt(event.target.value))}
+      />
       <div
         className={styles.worldWar}
         style={{
-          width: difficulty === 'easy' ? '320px' : difficulty === 'normal' ? '530px' : '950px',
-          height: difficulty === 'easy' ? '400px' : difficulty === 'normal' ? '600px' : '610px',
+          width:
+            difficulty === 'easy'
+              ? '320px'
+              : difficulty === 'normal'
+                ? '530px'
+                : difficulty === 'hard'
+                  ? '950px'
+                  : inputWidth * 30 + 50 > 262
+                    ? inputWidth * 30 + 50
+                    : '262px',
+
+          height:
+            difficulty === 'easy'
+              ? '400px'
+              : difficulty === 'normal'
+                ? '600px'
+                : difficulty === 'hard'
+                  ? '610px'
+                  : inputHeight * 30 + 130,
         }}
       >
         <div
           className={styles.flame}
           style={{
-            width: difficulty === 'easy' ? '280px' : difficulty === 'normal' ? '490px' : '910px',
+            width:
+              difficulty === 'easy'
+                ? '280px'
+                : difficulty === 'normal'
+                  ? '490px'
+                  : difficulty === 'hard'
+                    ? '910px'
+                    : inputWidth * 30 + 10 > 222
+                      ? inputWidth * 30 + 10
+                      : '222px',
           }}
         >
-          <div className={styles.boomNumber}>{10}</div>
+          <div className={styles.boomNumber}>
+            {bombCount - board.flat().filter((cell) => cell === 10).length}
+          </div>
           <div
             className={styles.smile}
             onClick={() => {
@@ -213,7 +274,9 @@ const Home = () => {
                 ? handleClick(9, 9, 10, 'easy')
                 : difficulty === 'normal'
                   ? handleClick(16, 16, 40, 'normal')
-                  : handleClick(30, 16, 99, 'hard');
+                  : difficulty === 'hard'
+                    ? handleClick(30, 16, 99, 'hard')
+                    : handleClick(inputWidth, inputHeight, inputBombCount, difficulty);
               {
                 setTime(0);
               }
@@ -224,6 +287,26 @@ const Home = () => {
                 : isFailed
                   ? ` ${-30 * 13}px 0px`
                   : ` ${-30 * 11}px 0px`,
+              marginLeft:
+                difficulty === 'easy'
+                  ? '24px'
+                  : difficulty === 'normal'
+                    ? '129px'
+                    : difficulty === 'hard'
+                      ? '338px'
+                      : inputWidth * 15 - 111 > 0
+                        ? inputWidth * 15 - 111
+                        : '0px',
+              marginRight:
+                difficulty === 'easy'
+                  ? '24px'
+                  : difficulty === 'normal'
+                    ? '129px'
+                    : difficulty === 'hard'
+                      ? '338px'
+                      : inputWidth * 15 - 111 > 0
+                        ? inputWidth * 15 - 111
+                        : '0px',
             }}
           />
           <div className={styles.timer}>{time}</div>
@@ -232,8 +315,22 @@ const Home = () => {
         <div
           className={styles.board}
           style={{
-            width: difficulty === 'easy' ? '280px' : difficulty === 'normal' ? '490px' : '910px',
-            height: difficulty === 'easy' ? '280px' : difficulty === 'normal' ? '490px' : '490px',
+            width:
+              difficulty === 'easy'
+                ? '280px'
+                : difficulty === 'normal'
+                  ? '490px'
+                  : difficulty === 'hard'
+                    ? '910px'
+                    : inputWidth * 30 + 10,
+            height:
+              difficulty === 'easy'
+                ? '280px'
+                : difficulty === 'normal'
+                  ? '490px'
+                  : difficulty === 'hard'
+                    ? '490px'
+                    : inputHeight * 30 + 10,
           }}
         >
           {board.map((row, y) =>
@@ -250,7 +347,7 @@ const Home = () => {
                   <div
                     className={styles.stone}
                     onClick={() => clickHandler(x, y)}
-                    onContextMenu={(event) => rightClickHandler(event, x, y)}
+                    onContextMenu={(event) => rightClickHandler(event, x, y, height, width)}
                   >
                     <div
                       className={styles.bombMapFlag}

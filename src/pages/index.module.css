@@ -12,7 +12,8 @@
   box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
   width: 320px;
   height: 400px;
   background-color: rgb(198 198 198);
